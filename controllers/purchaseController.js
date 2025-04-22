@@ -2,7 +2,7 @@ const logger = require("../middlewares/utils/logger");
 const { Purchase, User, Product } = require('../models');
 
 class PurchaseController {
-  static async buy() {
+  static async buy(req, res, next) {
     try {
       const productId = req.body.productId;
 
@@ -10,7 +10,7 @@ class PurchaseController {
         throw { status: 400, message: 'productId wajib diisi' }
       }
   
-      const userData = req.user;
+      const userData = req.user.id;
 
       const product = await Product.findByPk(Number(productId));
 
@@ -35,9 +35,9 @@ class PurchaseController {
           message: 'Product has been purchased',
           data
         })
-        .catch(err => {
-          throw err;
-        })
+      })
+      .catch(err => {
+        throw err;
       })
     } catch (error) {
       next(error);

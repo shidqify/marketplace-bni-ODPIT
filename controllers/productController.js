@@ -9,7 +9,7 @@ class ProductController {
         price: req.body.price? req.body.price : 0,
       }
 
-      if (data.price == 0) throw { status: 400, message: "Product data is not complete" }
+      if (data.price == 0 || !data.name) throw { status: 400, message: "Product data is not complete" }
 
       // Check product exist
       const product = await Product.findOne({

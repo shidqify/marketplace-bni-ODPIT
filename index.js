@@ -7,6 +7,9 @@ const path = require('path');
 const logger = require('./middlewares/utils/logger');
 // const upload = require('./middlewares/fileUpload');
 const morganStream = require("./middlewares/utils/morganStream");
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./docs/swagger.yaml');
 
 // our routes
 const indexRouter = require("./routers/index");
@@ -48,6 +51,9 @@ app.get('/', (req, res) => {
 // Set up our main routes
 app.use("/api", indexRouter);
 
+// Set up docs
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // Middleware to serve static files (for download)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -71,4 +77,5 @@ const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
   logger.info(`Server is connected on port ${PORT}`);
+  logger.info(`Swagger docs at http://localhost:${PORT}/api-docs`);
 });
